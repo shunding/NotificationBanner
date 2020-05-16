@@ -139,6 +139,9 @@ open class BaseNotificationBanner: UIView {
     /// The default padding between edges and views
     internal var padding: CGFloat = 15.0
 
+    /// The default spacing between side views and text labels
+    internal var viewsSpacing: CGFloat = 15.0
+
     /// The view controller to display the banner on. This is useful if you are wanting to display a banner underneath a navigation bar
     internal weak var parentViewController: UIViewController?
 
@@ -267,7 +270,7 @@ open class BaseNotificationBanner: UIView {
         }
     }
 
-    internal func spacerViewHeight() -> CGFloat {
+    public func spacerViewHeight() -> CGFloat {
         return NotificationBannerUtilities.isNotchFeaturedIPhone()
             && UIApplication.shared.statusBarOrientation.isPortrait
             && (parentViewController?.navigationController?.isNavigationBarHidden ?? true) ? 40.0 : 10.0

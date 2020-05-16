@@ -38,7 +38,7 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
                 var boundingWidth = UIScreen.main.bounds.width - padding * 2
                 
                 // Substract safeAreaInsets from width, if available
-                // We have to use keyWindow to ask for safeAreaInsets as `self` only knows its' safeAreaInsets in layoutSubviews
+                // We have to use keyWindow to ask for safeAreaInsets as `self` only knows it's safeAreaInsets in layoutSubviews
                 if #available(iOS 11.0, *), let keyWindow = UIApplication.shared.keyWindow {
                     let safeAreaOffset = keyWindow.safeAreaInsets.left + keyWindow.safeAreaInsets.right
                     
@@ -46,11 +46,11 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
                 }
                 
                 if leftView != nil {
-                    boundingWidth -= sideViewSize + padding
+                    boundingWidth -= sideViewSize + viewsSpacing
                 }
                 
                 if rightView != nil {
-                    boundingWidth -= sideViewSize + padding
+                    boundingWidth -= sideViewSize + viewsSpacing
                 }
                 
                 let titleHeight = ceil(titleLabel?.sizeThatFits(
@@ -62,7 +62,7 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
                            height: .greatestFiniteMagnitude)).height ?? 0.0)
                 
                 let topOffset: CGFloat = shouldAdjustForNotchFeaturedIphone() ? 44.0 : verticalSpacing
-                let minHeight: CGFloat = shouldAdjustForNotchFeaturedIphone() ? 88.0 : 64.0
+                let minHeight: CGFloat = shouldAdjustForNotchFeaturedIphone() ? 68.0 : 44.0
                 
                 var actualBannerHeight = topOffset + titleHeight + subtitleHeight + verticalSpacing
                 
@@ -78,7 +78,7 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
     }
     
     /// Spacing between the last label and the bottom edge of the banner
-    private let verticalSpacing: CGFloat = 14.0
+    private var verticalSpacing: CGFloat = 14.0
     
     /// Spacing between title and subtitle
     private let innerSpacing: CGFloat = 2.5
@@ -108,21 +108,34 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
                 style: BannerStyle = .info,
                 colors: BannerColorsProtocol? = nil,
                 iconPosition: IconPosition = .center,
-                sideViewSize: CGFloat = 24.0) {
-        
+                sideViewSize: CGFloat = 24.0,
+                horizontalPadding overridePadding: CGFloat? = nil,
+                verticalPadding overrideVerticalSpacing: CGFloat? = nil,
+                viewsSpacing overrideViewsSpacing: CGFloat? = nil) {
+
         self.leftView = leftView
         self.rightView = rightView
         self.sideViewSize = sideViewSize
         
         super.init(style: style, colors: colors)
-        
+
+        if let overridePadding = overridePadding {
+            self.padding = overridePadding
+        }
+        if let overrideViewsSpacing = overrideViewsSpacing {
+            self.viewsSpacing = overrideViewsSpacing
+        }
+        if let overrideVerticalSpacing = overrideVerticalSpacing {
+            self.verticalSpacing = overrideVerticalSpacing
+        }
+
         let labelsView = UIStackView()
         labelsView.axis = .vertical
         labelsView.spacing = innerSpacing
         
         let outerStackView = UIStackView()
-        outerStackView.spacing = padding
-        
+        outerStackView.spacing = viewsSpacing
+
         switch iconPosition {
         case .top:
             outerStackView.alignment = .top
@@ -165,7 +178,7 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
         }
         
         contentView.addSubview(outerStackView)
-        outerStackView.snp.makeConstraints { (make) in
+        outerStackView.snp.makeConstraints { make in
             if #available(iOS 11.0, *) {
                 make.left.equalTo(safeAreaLayoutGuide).offset(padding)
                 make.right.equalTo(safeAreaLayoutGuide).offset(-padding)
@@ -182,7 +195,7 @@ open class GrowingNotificationBanner: BaseNotificationBanner {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func spacerViewHeight() -> CGFloat {
+    override public func spacerViewHeight() -> CGFloat {
         return super.spacerViewHeight() + heightAdjustment
     }
 }

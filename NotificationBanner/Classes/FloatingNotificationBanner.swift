@@ -33,9 +33,21 @@ open class FloatingNotificationBanner: GrowingNotificationBanner {
                 rightView: UIView? = nil,
                 style: BannerStyle = .info,
                 colors: BannerColorsProtocol? = nil,
-                iconPosition: IconPosition = .center) {
+                iconPosition: IconPosition = .center,
+                horizontalPadding: CGFloat? = nil,
+                verticalPadding: CGFloat? = nil,
+                viewsSpacing: CGFloat? = nil) {
 
-        super.init(title: title, subtitle: subtitle, leftView: leftView, rightView: rightView, style: style, colors: colors, iconPosition: iconPosition)
+        super.init(title: title,
+                   subtitle: subtitle,
+                   leftView: leftView,
+                   rightView: rightView,
+                   style: style,
+                   colors: colors,
+                   iconPosition: iconPosition,
+                   horizontalPadding: horizontalPadding,
+                   verticalPadding: verticalPadding,
+                   viewsSpacing: viewsSpacing)
         
         if let titleFont = titleFont {
             self.titleFont = titleFont
