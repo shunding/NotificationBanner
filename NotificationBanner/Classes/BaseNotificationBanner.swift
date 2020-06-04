@@ -166,6 +166,9 @@ open class BaseNotificationBanner: UIView {
     /// The position the notification banner should slide in from
     private(set) var bannerPosition: BannerPosition!
 
+    /// Should device orientation changes be observed for this banner
+    private(set) var observeDeviceOrientationChanges: Bool = true
+
     /// The notification banner sides edges insets from superview. If presented - spacerView color will be transparent
     internal var bannerEdgeInsets: UIEdgeInsets? = nil {
         didSet {
@@ -317,14 +320,16 @@ open class BaseNotificationBanner: UIView {
         to manage multiple banner queues and prevent any conflicts that may occur.
         - parameter viewController: The view controller to display the notifification banner on. If nil, it will
         be placed on the main app window
+        - parameter observeDeviceOrientationChanges: If false, device orientation changes will not be observed for this banner
     */
     public func show(queuePosition: QueuePosition = .back,
                      bannerPosition: BannerPosition = .top,
                      queue: NotificationBannerQueue = NotificationBannerQueue.default,
-                     on viewController: UIViewController? = nil) {
+                     on viewController: UIViewController? = nil,
+                     observeDeviceOrientationChanges: Bool = true) {
         parentViewController = viewController
         bannerQueue = queue
-        show(placeOnQueue: true, queuePosition: queuePosition, bannerPosition: bannerPosition)
+        show(placeOnQueue: true, queuePosition: queuePosition, bannerPosition: bannerPosition, observeDeviceOrientationChanges: observeDeviceOrientationChanges)
     }
 
     /**
@@ -333,26 +338,31 @@ open class BaseNotificationBanner: UIView {
         - parameter queuePosition: The position to show the notification banner. If the position is .front, the
         banner will be displayed immediately
         - parameter bannerPosition: The position the notification banner should slide in from
+        - parameter observeDeviceOrientationChanges: If false, device orientation changes will not be observed for this banner
     */
     func show(placeOnQueue: Bool,
               queuePosition: QueuePosition = .back,
-              bannerPosition: BannerPosition = .top) {
+              bannerPosition: BannerPosition = .top,
+              observeDeviceOrientationChanges: Bool = true) {
 
         guard !isDisplaying else {
             return
         }
 
         self.bannerPosition = bannerPosition
+        self.observeDeviceOrientationChanges = observeDeviceOrientationChanges
         createBannerConstraints(for: bannerPosition)
         updateBannerPositionFrames()
 
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIDevice.orientationDidChangeNotification,
-                                                  object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(onOrientationChanged),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+        if observeDeviceOrientationChanges {
+            NotificationCenter.default.removeObserver(self,
+                                                      name: UIDevice.orientationDidChangeNotification,
+                                                      object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(onOrientationChanged),
+                                                   name: UIDevice.orientationDidChangeNotification,
+                                                   object: nil)
+        }
 
         if placeOnQueue {
             bannerQueue.addBanner(self,

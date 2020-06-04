@@ -60,11 +60,11 @@ open class NotificationBannerQueue: NSObject {
 
             let bannersCount =  banners.filter { $0.isDisplaying }.count
             if bannersCount < maxBannersOnScreenSimultaneously {
-                banner.show(placeOnQueue: false, bannerPosition: banner.bannerPosition)
+                banner.show(placeOnQueue: false, bannerPosition: banner.bannerPosition, observeDeviceOrientationChanges: banner.observeDeviceOrientationChanges)
             }
 
         } else {
-            banner.show(placeOnQueue: false, bannerPosition: bannerPosition)
+            banner.show(placeOnQueue: false, bannerPosition: bannerPosition, observeDeviceOrientationChanges: banner.observeDeviceOrientationChanges)
 
             if let firstBanner = firstNotDisplayedBanner() {
                 firstBanner.suspend()
@@ -104,7 +104,7 @@ open class NotificationBannerQueue: NSObject {
             if banner.isSuspended {
                 banner.resume()
             } else {
-                banner.show(placeOnQueue: false, bannerPosition: banner.bannerPosition)
+                banner.show(placeOnQueue: false, bannerPosition: banner.bannerPosition, observeDeviceOrientationChanges: banner.observeDeviceOrientationChanges)
             }
 
             callback(false)
