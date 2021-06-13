@@ -34,6 +34,7 @@ open class FloatingNotificationBanner: GrowingNotificationBanner {
                 style: BannerStyle = .info,
                 colors: BannerColorsProtocol? = nil,
                 iconPosition: IconPosition = .center,
+                sideViewSize: CGFloat = 24,
                 horizontalPadding: CGFloat? = nil,
                 verticalPadding: CGFloat? = nil,
                 viewsSpacing: CGFloat? = nil) {
@@ -45,6 +46,7 @@ open class FloatingNotificationBanner: GrowingNotificationBanner {
                    style: style,
                    colors: colors,
                    iconPosition: iconPosition,
+                   sideViewSize: sideViewSize,
                    horizontalPadding: horizontalPadding,
                    verticalPadding: verticalPadding,
                    viewsSpacing: viewsSpacing)
