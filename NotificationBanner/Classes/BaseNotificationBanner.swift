@@ -279,7 +279,7 @@ open class BaseNotificationBanner: UIView {
             && (parentViewController?.navigationController?.isNavigationBarHidden ?? true) ? 40.0 : 10.0
     }
 
-    private func finishBannerYOffset() -> CGFloat {
+    open func finishBannerYOffset() -> CGFloat {
         let bannerIndex = (bannerQueue.banners.firstIndex(of: self) ?? bannerQueue.banners.filter { $0.isDisplaying }.count)
         
         return bannerQueue.banners.prefix(bannerIndex).reduce(0) { $0
